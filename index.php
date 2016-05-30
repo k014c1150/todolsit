@@ -59,5 +59,5 @@ mysql_close($link);
 		}
 		echo "</form>"
 		?>
-	</body/
+	</body>
 </html>
