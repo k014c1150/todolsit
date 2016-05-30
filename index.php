@@ -30,8 +30,8 @@ mysql_close($link);
 	</head>
 	<body>
 		<h1>todo lsit</h1>
-		<form method="post" action = "index.php">
-		<input type="text" name="mytask" >
+		<form method="get" action = "index.php">
+		<input type="text" name="add" >
 		<p>
 		<input type="submit" value="追加">
 		</p>
@@ -39,24 +39,25 @@ mysql_close($link);
 		<hr>
 		
 		<?php
-		$tasks[] = /*DBから取得したデータを代入*/;
-		if(@$_POST['mytask']){
-			if(@$_POST['mytask']==""){
-			}else{
-			$tasks[] = htmlspecialchars($_POST['mytask']) + "\n";
+		if(isset($_GET['add'])){
 			//DBにデータを受け渡す
-			}
 		}
-
+		if(@$_GET['delete']){
+			/*DBのデータを消す処理*/
+		}		
+		$tasks = ["testtask","testtask2"] /*DBから取得したデータを代入*/;
 		$index = 0;
 		$tasks_total_num = count(@$tasks);
+		echo "<form method ='get' action ='index.php'>";
 		while($tasks_total_num > $index) 
 		{
 			echo "<li>";
 			echo $tasks[$index];
-			echo "<button onclick = \"\">$trash_icon</button>";/*DBのデータを消す処理*/
+			//echo "";
+			echo "<button name = 'delete'>$trash_icon</button>";
 			$index++;
 		}
+		echo "</form>"
 		?>
 	</body/
 </html>
