@@ -1,7 +1,6 @@
 <?php
+$trash_icon = "<i class='fa fa-trash-o' aria-hidden='true'></i>";
 
-$tasks = ["作業1","会議1","○○の勉強"];
-$icon = "<i class='fa fa-trash-o' aria-hidden='true'></i>"
 /*
 $link = mysql_connect('localhost', 'user', 'pass');
 if (!$link) {
@@ -20,6 +19,7 @@ if (!$result) {
 
 mysql_close($link);
 */
+
 ?>
 <!doctype html>
 <html>
@@ -30,25 +30,33 @@ mysql_close($link);
 	</head>
 	<body>
 		<h1>todo lsit</h1>
-		<form name=myText>
-		<input type="text" name=myText value="タスクを入力してください">
-		</form>
+		<form method="post" action = "index.php">
+		<input type="text" name="mytask" >
 		<p>
-		<input type="button" value="追加" onclick="">
+		<input type="submit" value="追加">
 		</p>
+		</form>
 		<hr>
 		
 		<?php
+		$tasks[] = /*DBから取得したデータを代入*/;
+		if(@$_POST['mytask']){
+			if(@$_POST['mytask']==""){
+			}else{
+			$tasks[] = htmlspecialchars($_POST['mytask']) + "\n";
+			//DBにデータを受け渡す
+			}
+		}
+
 		$index = 0;
-		$tasks_total_num = count($tasks);
+		$tasks_total_num = count(@$tasks);
 		while($tasks_total_num > $index) 
 		{
 			echo "<li>";
 			echo $tasks[$index];
-			echo "<button onclick = \"\">$icon</button>";
+			echo "<button onclick = \"\">$trash_icon</button>";/*DBのデータを消す処理*/
 			$index++;
 		}
 		?>
-	</body>
+	</body/
 </html>
-
