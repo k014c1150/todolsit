@@ -1,25 +1,15 @@
 <?php
 $trash_icon = "<i class='fa fa-trash-o' aria-hidden='true'></i>";
+$dsn = 'mysql:dbname=todolist;host=localhost';
+$user = 'root';
+$password = '';
+try{
 
-/*
-$link = mysql_connect('localhost', 'user', 'pass');
-if (!$link) {
-    die('接続失敗です。'.mysql_error());
+$dbh = new PDO($dsn,$user,$password);
+}catch(Exception $e){
+	print('Connection failed:'.$e ->getMessage());
+	die();
 }
-
-$db_selected = mysql_select_db('database_name', $link);
-if (!$db_selected){
-    die('データベース選択失敗です。'.mysql_error());
-}
-
-$result = mysql_query('SELECT * FROM xxxx');
-if (!$result) {
-    die('クエリーが失敗しました。'.mysql_error());
-}
-
-mysql_close($link);
-*/
-
 ?>
 <!doctype html>
 <html>
@@ -31,31 +21,60 @@ mysql_close($link);
 	<body>
 		<h1>todo lsit</h1>
 		<form method="get" action = "index.php">
-		<input type="text" name="add" >
+		<input type="text" name="task" >
 		<p>
-		<input type="submit" value="追加">
+		<input type="submit" value="追加" name ="add">
 		</p>
 		</form>
 		<hr>
 		
 		<?php
 		if(isset($_GET['add'])){
-			//DBにデータを受け渡す
+			$item = $_GET['task'];
+			$item = htmlspecialchars($item,ENT_QUOTES);
+			$sql = 'INSERT INTO list(task) VALUES(:item)';
+			$stmt = $dbh -> prepare($sql);
+			$stmt ->bindParam(':item',$item);
+			$stmt -> execute();
 		}
 		if(@$_GET['delete']){
-			/*DBのデータを消す処理*/
+			$id = $_GET['delete'];//削除するデータの特定
+
+			$sql = 'DELETE FROM list WHERE id =:id ';
+			$stmt = $dbh ->prepare($sql);
+			$stmt ->bindParam(':id',$id);
+			$stmt -> execute();
+
 		}		
-		$tasks = ["testtask","testtask2"] /*DBから取得したデータを代入*/;
-		$index = 0;
-		$tasks_total_num = count(@$tasks);
-		echo "<form method ='get' action ='index.php'>";
-		while($tasks_total_num > $index) 
+		 /*DBから取得したデータを代入*/;
+		$link = mysql_connect("localhost","root","");
+		if (!$link) {
+		    die('接続失敗です。'.mysql_error());
+		}
+
+		$db_selected = mysql_select_db('todolist', $link);
+		if (!$db_selected){
+		    die('データベース選択失敗です。'.mysql_error());
+		}
+
+		$result = mysql_query('SELECT id,task FROM list');
+		mysql_close($link);
+
+		if (!$result) {
+		    die('クエリーが失敗しました。'.mysql_error());
+	
+		}
+
+
+	
+
+		while($tasks = mysql_fetch_assoc($result)) 
 		{
+			echo "<form method ='get' action ='index.php'>";
 			echo "<li>";
-			echo $tasks[$index];
-			//echo "";
-			echo "<button name = 'delete'>$trash_icon</button>";
-			$index++;
+			echo $tasks["task"];
+			$id = $tasks["id"];
+			echo "<button name = 'delete' value = '" . $id . "'>$trash_icon</button>";
 		}
 		echo "</form>"
 		?>
